@@ -1,0 +1,14 @@
+name: Dockerfile lint
+
+on:
+  push:
+    paths:
+      - Dockerfile
+      - .github/workflows/lint.yml
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: hadolint/hadolint-action@v3.3.0
