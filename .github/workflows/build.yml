@@ -48,9 +48,9 @@ jobs:
         with:
           images: ${{ vars.DOCKERHUB_REPOSITORY }}
           tags: |
-            type=raw,${{ matrix.epgstation-version }}-${{ matrix.node-version }}-${{ matrix.debian-version }}
             type=schedule,prefix=${{ matrix.epgstation-version }}-${{ matrix.node-version }}-${{ matrix.debian-version }}-
             type=sha,format=long,prefix=${{ matrix.epgstation-version }}-${{ matrix.node-version }}-${{ matrix.debian-version }}-
+            type=raw,${{ matrix.epgstation-version }}-${{ matrix.node-version }}-${{ matrix.debian-version }},enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
