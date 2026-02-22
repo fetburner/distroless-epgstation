@@ -1,0 +1,70 @@
+name: Docker build
+
+on:
+  push:
+    paths:
+      - Dockerfile
+      - .github/workflows/build.yml
+
+jobs:
+  docker-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 18
+        debian-version:
+          - bookworm
+        epgstation-version:
+          - v2.10.0
+          - v2.9.1
+          - v2.8.0
+          - v2.7.3
+        include:
+          - debian-version: bookworm
+            debian-version-number: 12
+
+          - debian-version: bookworm
+            busybox-version: 1.35.0-glibc
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to the Container registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ vars.DOCKERHUB_REPOSITORY }}
+          tags: |
+            type=raw,${{ matrix.epgstation-version }}-${{ matrix.node-version }}-${{ matrix.debian-version }}
+            type=schedule,prefix=${{ matrix.epgstation-version }}-${{ matrix.node-version }}-${{ matrix.debian-version }}-
+            type=sha,format=long,prefix=${{ matrix.epgstation-version }}-${{ matrix.node-version }}-${{ matrix.debian-version }}-
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.epgstation-version }}-${{ matrix.node-version }}-${{ matrix.debian-version }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.epgstation-version }}-${{ matrix.node-version }}-${{ matrix.debian-version }}
+          build-args: |
+            NODE_VERSION=${{ matrix.node-version }}
+            DEBIAN_VERSION=${{ matrix.debian-version }}
+            BUSYBOX_VERSION=${{ matrix.busybox-version }}
+            EPGSTATION_VERSION=${{ matrix.epgstation-version }}
+            DEBIAN_VERSION_NUMBER=${{ matrix.debian-version-number }}
