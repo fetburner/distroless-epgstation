@@ -1,0 +1,21 @@
+name: Update DockerHub repository description
+
+on:
+  push:
+    paths:
+      - README.md
+      - .github/workflows/description.yml
+
+jobs:
+  dockerhub-description:
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Update repo description
+        uses: peter-evans/dockerhub-description@v5
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ vars.DOCKERHUB_REPOSITORY }}
+          short-description: ${{ github.event.repository.description }}
