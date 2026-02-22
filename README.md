@@ -16,3 +16,19 @@
 - v2.7.3-18-bookworm
 
 ビルドに用いた Dockerfile は [GitHub](https://github.com/fetburner/distroless-epgstation) のリポジトリ上にあります。
+
+## 注意点
+
+npm がイメージに同梱されていない上 node コマンドにパスが通っていないため、データベースのバックアップとレストアの手順が公式イメージと異なります。
+
+バックアップの際は次のコマンドを、
+
+```
+/nodejs/bin/node /app/dist/DBTools.js -m backup -o FILENAME
+```
+
+レストアの際は次のコマンドを実行して下さい。
+
+```
+/nodejs/bin/node /app/dist/DBTools.js -m restore -o FILENAME
+```
