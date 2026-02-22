@@ -28,7 +28,7 @@ jobs:
             busybox-version: 1.35.0-glibc
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
