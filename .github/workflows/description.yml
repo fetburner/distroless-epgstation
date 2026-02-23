@@ -2,6 +2,8 @@ name: Update DockerHub repository description
 
 on:
   push:
+    branches:
+      - main
     paths:
       - README.md
       - .github/workflows/description.yml
