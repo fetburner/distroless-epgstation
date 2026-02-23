@@ -1,6 +1,9 @@
 name: Docker build
 
 on:
+  schedule:
+    # 日本時間の0時に毎日ビルドする
+    - cron: "0 15 * * *"
   push:
     paths:
       - Dockerfile
