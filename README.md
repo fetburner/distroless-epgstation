@@ -35,13 +35,17 @@ RUN --mount=type=cache,id=apt,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,id=apt,target=/var/apt/lists,sharing=locked \
     apt-get update && \
     apt-get install -y \
-      make gcc git g++ automake curl wget autoconf build-essential libass-dev libfreetype6-dev libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev libxcb-xfixes0-dev pkg-config texinfo zlib1g-dev \
+      make gcc git g++ automake curl wget autoconf build-essential libass-dev libfreetype6-dev \
+      libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev libvorbis-dev libxcb1-dev \
+      libxcb-shm0-dev libxcb-xfixes0-dev pkg-config texinfo zlib1g-dev \
       yasm libx264-dev libmp3lame-dev libopus-dev libvpx-dev \
       libx265-dev libnuma-dev \
-      libasound2 libass9 libvdpau1 libva-x11-2 libva-drm2 libxcb-shm0 libxcb-xfixes0 libxcb-shape0 libvorbisenc2 libtheora0 libaribb24-dev
+      libasound2 libass9 libvdpau1 libva-x11-2 libva-drm2 libxcb-shm0 libxcb-xfixes0 \
+      libxcb-shape0 libvorbisenc2 libtheora0 libaribb24-dev
 
 # FFmpeg のビルド
-# ここでのビルド設定は [docker-mirakurun-epgstation](https://github.com/l3tnun/docker-mirakurun-epgstation) を参考としたもの
+# ここでのビルド設定は
+# [docker-mirakurun-epgstation](https://github.com/l3tnun/docker-mirakurun-epgstation) を参考としたもの
 RUN curl -fsSL http://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 | tar -xj --strip-components=1
 
 RUN ./configure \
@@ -75,8 +79,10 @@ RUN ./extlibcp $(which ffmpeg) /build && \
 
 FROM fetburner/distroless-epgstation:v2.10.0-18-bookworm
 
-# fetburner/distroless-epgstation:v2.10.0-18-bookworm に既に存在する共有ライブラリは除外して、ビルドした FFmpeg 及び FFprobe をコピーする
-# コピーしなくても良い共有ライブラリはプラットフォームや Debian のバージョンによって変わるので、[dive](https://github.com/wagoodman/dive) などを使って調べると良い
+# fetburner/distroless-epgstation:v2.10.0-18-bookworm に既に存在する共有ライブラリは除外して、
+# ビルドした FFmpeg 及び FFprobe をコピーする
+# コピーしなくても良い共有ライブラリはプラットフォームや Debian のバージョンによって変わるので、
+# [dive](https://github.com/wagoodman/dive) などを使って調べると良い
 COPY --from=ffmpeg-build \
      --exclude=lib/aarch64-linux-gnu/libc.so.6 \
      --exclude=lib/aarch64-linux-gnu/libm.so.6 \
