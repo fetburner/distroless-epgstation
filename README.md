@@ -92,6 +92,30 @@ COPY --from=ffmpeg-build \
      /build /
 ```
 
+`/app` 以下の EPGStation の動作に必要なファイルの配置は公式イメージと共通しているため、自分でビルドした FFmpeg さえ入れてしまえば公式イメージと同じ感覚で利用できます。
+
+EPGStation の公式イメージを使った録画環境の構築例としては [docker-mirakurun-epgstation](https://github.com/l3tnun/docker-mirakurun-epgstation) が有名ですが、
+FFmpeg を同梱した EPGStation のイメージを作成する Dockerfile さえ distroless-epgstation を使うものに置き換えてしまえば、
+同様の docker-compose の設定で distroless-epgstation を使った録画環境を構築できます。
+
+```yaml
+epgstation:
+  build:
+    context: "./epgstation"
+    dockerfile: "Dockerfile"
+  volumes:
+    - ./epgstation/config:/app/config
+    - ./epgstation/data:/app/data
+    - ./epgstation/thumbnail:/app/thumbnail
+    - ./epgstation/logs:/app/logs
+    - ./recorded:/app/recorded
+  environment:
+    TZ: "Asia/Tokyo"
+  ports:
+    - "8888:8888"
+  restart: unless-stopped
+```
+
 ## 注意点
 
 SQLite3 の実行に必要な共有ライブラリがイメージに同梱されていないため、データベースには MySQL しか利用できません。
