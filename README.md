@@ -10,12 +10,14 @@
 
 [EPGStation](https://github.com/l3tnun/EPGStation) のバージョン、[EPGStation](https://github.com/l3tnun/EPGStation) の実行に用いる Node.js のバージョン、及び [Distroless](https://github.com/GoogleContainerTools/distroless) がベースにしている Debian のバージョンをハイフンで繋げてタグを打っており、現在次のバージョンをサポートしています。
 
-- v2.10.0-18-bookworm
-- v2.9.1-18-bookworm
-- v2.8.0-18-bookworm
-- v2.7.3-18-bookworm
+- [v2.10.0-18-bookworm](https://hub.docker.com/layers/fetburner/distroless-epgstation/v2.10.0-18-bookworm)
+- [v2.9.1-18-bookworm](https://hub.docker.com/layers/fetburner/distroless-epgstation/v2.9.1-18-bookworm)
+- [v2.8.0-18-bookworm](https://hub.docker.com/layers/fetburner/distroless-epgstation/v2.8.0-18-bookworm)
+- [v2.7.3-18-bookworm](https://hub.docker.com/layers/fetburner/distroless-epgstation/v2.7.3-18-bookworm)
 
-ビルドに用いた Dockerfile は [GitHub](https://github.com/fetburner/distroless-epgstation) のリポジトリ上にあります。
+これらは全て[同一の Dockerfile](https://github.com/fetburner/distroless-epgstation/blob/main/Dockerfile) からビルドされているので、イメージの中身が気になった場合はそちらを参照して下さい。
+
+また、DockerHub とは別に [GitHub Container Registry](https://github.com/fetburner/distroless-epgstation/pkgs/container/distroless-epgstation) にもイメージをアップロードしており、GitHub Actions から用いる場合はそちらも便利です。
 
 ## 利用例
 
