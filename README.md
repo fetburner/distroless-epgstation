@@ -79,6 +79,9 @@ RUN curl -fsSL https://github.com/kurukurumaware/extlibcp/tarball/master | tar -
 RUN ./extlibcp $(which ffmpeg) /build && \
     ./extlibcp $(which ffprobe) /build
 
+# GitHub Container Registry のイメージを使う場合
+# FROM ghcr.io/fetburner/distroless-epgstation:v2.10.0-18-bookworm
+
 FROM fetburner/distroless-epgstation:v2.10.0-18-bookworm
 
 # fetburner/distroless-epgstation:v2.10.0-18-bookworm に既に存在する共有ライブラリは除外して、
