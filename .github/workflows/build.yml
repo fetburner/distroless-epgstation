@@ -12,6 +12,9 @@ on:
 jobs:
   docker-build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     strategy:
       matrix:
         node-version:
@@ -39,17 +42,26 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to the Container registry
+      - name: Login to Dockerhub
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ vars.DOCKERHUB_REPOSITORY }}
+          images: |
+            ${{ vars.GHCR_REPOSITORY }}
+            ${{ vars.DOCKERHUB_REPOSITORY }}
           tags: |
             type=schedule,prefix=${{ matrix.epgstation-version }}-${{ matrix.node-version }}-${{ matrix.debian-version }}-
             type=sha,format=long,prefix=${{ matrix.epgstation-version }}-${{ matrix.node-version }}-${{ matrix.debian-version }}-
