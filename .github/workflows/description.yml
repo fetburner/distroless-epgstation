@@ -12,7 +12,7 @@ jobs:
   dockerhub-description:
     runs-on: ubuntu-slim
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Update repo description
         uses: peter-evans/dockerhub-description@v5
